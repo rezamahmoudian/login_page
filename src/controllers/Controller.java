@@ -127,7 +127,7 @@ public class Controller implements Initializable {
     private Label lbl_UserName;
 
     @FXML
-    private TextField search_BL_field;
+    private TextField search_Bklist_txtfield;
 
     @FXML
     private TextField name_writer;
@@ -139,7 +139,7 @@ public class Controller implements Initializable {
     private Label lbl_name;
 
     @FXML
-    private JFXButton btn_search_BL;
+    private JFXButton btn_search_BkList;
 
     @FXML
     private Label lbl_family;
@@ -428,8 +428,80 @@ public class Controller implements Initializable {
         name_writer.setText("");
 
     }
+    //جستجو در صفحه ی بوک لیست بر اساس نام کتاب
+    public void btn_search_BkList_clicked(ActionEvent actionEvent) {
+        String bookname = search_Bklist_txtfield.getText();
 
-    public void btn_search_BL_clicked(ActionEvent actionEvent) {
+        try {
+            pnItems_booklist.getChildren().clear();
+            Node[] nodes = new Node[1000];
+
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            String database = "jdbc:mysql://localhost:3306/databace_test?user=root";
+            Connection connect = DriverManager.getConnection(database);
+            Statement state = connect.createStatement();
+
+            String mysql = "SELECT id ,amantgirande ,  name, writer , date, date_ms , amantdahande , mohlat FROM books where name = "+ "\""+ bookname +"\"";
+            System.out.println(mysql);
+
+            ResultSet result = state.executeQuery(mysql);
+
+            int i=0;
+            while (result.next()) {
+                int bookid = result.getInt("id");
+                bookname = result.getString("name");
+                String bookwriter = result.getString("writer");
+                String date = result.getString("date");
+                long date_ms = result.getLong("date_ms");
+                String amanatdahande = result.getString("amantdahande");
+                String amanatgirande = result.getString("amantgirande");
+                Date date1 = new Date();
+                long tenday = 86400000;
+
+
+                long mohlat = date_ms + tenday - date1.getTime();
+                mohlat = (mohlat / 8640000) + 1;
+
+                //ست کردن دوباره ی جول نمایش کتاب ها بر اساس نام سرچ شده
+                try {
+
+                    final int j = i;
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/item2.fxml"));
+                    //nodes[i] = FXMLLoader.load(getClass().getResource("Item.fxml"));
+                    Parent root = (Parent) loader.load();
+
+                    Controlleritem2 a = loader.getController();
+                    a.set_bookname(bookname);
+                    a.set_bookwriter(bookwriter);
+                    a.set_amanatdahande(amanatdahande);
+                    a.set_bookID(String.valueOf(bookid));
+
+
+                    nodes[i] = root;
+                    //give the items some effect
+
+                    nodes[i].setOnMouseEntered(event -> {
+                        nodes[j].setStyle("-fx-background-color : #0A0E3F");
+                    });
+                    nodes[i].setOnMouseExited(event -> {
+                        nodes[j].setStyle("-fx-background-color : #02030A");
+                    });
+                    pnItems_booklist.getChildren().add(nodes[i]);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                i++;
+            }
+            state.close();
+            connect.close();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+
+
+
+
     }
 
     public void btn_info_clicked(ActionEvent actionEvent) {
@@ -568,5 +640,7 @@ public class Controller implements Initializable {
             }
 
     }
+
+
 }
 
