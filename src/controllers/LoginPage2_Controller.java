@@ -139,7 +139,7 @@ public class  LoginPage2_Controller {
         try {
             //اتصال به دیتابیس
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3306/databace_test?user=root";
+            String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
             Connection connect = DriverManager.getConnection(database);
             Statement state = connect.createStatement();
             try {
@@ -219,7 +219,7 @@ public class  LoginPage2_Controller {
             // کانکشن به دیتابیس
             try {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
-                String database = "jdbc:mysql://localhost:3306/databace_test?user=root";
+                String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
                 Connection connect = DriverManager.getConnection(database);
                 Statement state = connect.createStatement();
                 String mysql = "SELECT id ,name, family,username , password FROM person2";

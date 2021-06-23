@@ -168,20 +168,71 @@ public class Controller implements Initializable {
     final ObservableList<String>bookInfo = FXCollections.observableArrayList();
 
 
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        id = LoginPage2_Controller.get_id();
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
+            Connection connect = DriverManager.getConnection(database);
+            Statement state = connect.createStatement();
+            String mysql = "SELECT name, family,username , password FROM person2 WHERE id ="+id;
+            System.out.println("mysql=" +mysql);
+            ResultSet result = state.executeQuery(mysql);
+            while (result.next()) {
+                //   String ID = result.getString("id");
+                String username = result.getString("username");
+                String password = result.getString("password");
+                String name = result.getString("name");
+                String family = result.getString("family");
+                String fullname = (name + " " + family);
+                System.out.println("fullname =" + fullname);
+                lbl_fullname.setText(fullname);
+                lbl_name.setText(name+" : نام");
+                lbl_family.setText(family+" : نام خانوادگی");
+                lbl_ID.setText("آی دی : "+id);
+                lbl_AccessLevel.setText("سطح دسترسی : کتابدار");
+                lbl_UserName.setText(username + " : نام کاربری");
+                //         setLbl_book_name();
+            }
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        pane_vorod.setVisible(false);
+        leftPane.setVisible(true);
+        rightPane.setVisible(true);
+        homeList();
+
+    }
+
+
+    @FXML
+    void btn_vorod_clicked(ActionEvent event) {
+        pane_BooksList.setVisible(false);
+        pane_Info.setVisible(false);
+        pane_Home.setVisible(true);
+    }
+
+    public void btn_Home_clicked(ActionEvent actionEvent) {
+        pane_BooksList.setVisible(false);
+        pane_Info.setVisible(false);
+        pane_Home.setVisible(true);
+        homeList();
+    }
+
     public void homeList(){
         pnItems.getChildren().clear();
         Node[] nodes = new Node[1000];
         // for (int i = 0; i < nodes.length; i++) {
         try {
-
             //اتصال به دیتابیس
-
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3306/databace_test?user=root";
+            String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
             Connection connect = DriverManager.getConnection(database);
             Statement state = connect.createStatement();
             try {
-                
                 //ساختن تیبل مورد نیاز در دیتابیس
                 String crtbl = "CREATE TABLE  IF NOT EXISTS `databace_test`.`books` (`id` INT NOT NULL , `amantgirande` TEXT , `name` TEXT NOT NULL ,  `writer` TEXT NOT NULL ,  `date` TEXT NOT NULL ,  `amantdahande` TEXT NOT NULL ,  `date_ms` BIGINT NOT NULL ,  `mohlat` INT NOT NULL , PRIMARY KEY (`id`) ) ENGINE = InnoDB";
                 state.execute(crtbl);
@@ -190,12 +241,9 @@ public class Controller implements Initializable {
             }
             String mysql = "SELECT id ,amantgirande ,  name, writer , date, date_ms , amantdahande , mohlat FROM books where amantgirande = "+ "\"" +lbl_fullname.getText()+"\"";
             System.out.println(mysql);
-
             ResultSet result = state.executeQuery(mysql);
-
             int i=0;
             while (result.next()) {
-
                 int bookid = result.getInt("id");
                 String bookname = result.getString("name");
                 String bookwriter = result.getString("writer");
@@ -205,8 +253,6 @@ public class Controller implements Initializable {
                 String amanatgirande = result.getString("amantgirande");
                 Date date1 = new Date();
                 long tenday = 86400000;
-
-
                 long mohlat = date_ms + tenday - date1.getTime();
                 mohlat = (mohlat / 8640000) + 1;
 
@@ -246,21 +292,25 @@ public class Controller implements Initializable {
         }
     }
 
+    public void btn_BookList_clicked(ActionEvent actionEvent) {
+        pane_Info.setVisible(false);
+        pane_Home.setVisible(false);
+        pane_BooksList.setVisible(true);
+        booklists();
+    }
+
 
     public void booklists(){
         pnItems_booklist.getChildren().clear();
         Node[] nodes = new Node[1000];
 
         try {
-
             //اتصال به دیتابیس
-
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3306/databace_test?user=root";
+            String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
             Connection connect = DriverManager.getConnection(database);
             Statement state = connect.createStatement();
             try {
-
                 //ساختن تیبل مورد نیاز در دیتابیس
                 String crtbl = "CREATE TABLE  IF NOT EXISTS `databace_test`.`books` ( `id` INT NOT NULL , `amantgirande` TEXT , `name` TEXT NOT NULL ,  `writer` TEXT NOT NULL ,  `date` TEXT NOT NULL ,  `amantdahande` TEXT NOT NULL ,  `date_ms` BIGINT NOT NULL ,  `mohlat` INT NOT NULL , PRIMARY KEY (`id`) ) ENGINE = InnoDB";
                 state.execute(crtbl);
@@ -269,12 +319,9 @@ public class Controller implements Initializable {
             }
             String mysql = "SELECT id , amantgirande,  name, writer , date, date_ms , amantdahande , mohlat FROM books";
             System.out.println(mysql);
-
             ResultSet result = state.executeQuery(mysql);
-
             int i=0;
             while (result.next()) {
-                //   String ID = result.getString("id");
                 String bookname = result.getString("name");
                 String bookwriter = result.getString("writer");
                 String date = result.getString("date");
@@ -285,36 +332,24 @@ public class Controller implements Initializable {
                 long tenday = 86400000;
                 int bookid1 = result.getInt("id");
 
-
                 long mohlat = date_ms + tenday - date1.getTime();
                 mohlat = (mohlat / 8640000) + 1;
-
-
                 try {
-
                     final int j = i;
                     //FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/itemBook.fxml"));
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/item2.fxml"));
                     //nodes[i] = FXMLLoader.load(getClass().getResource("Item.fxml"));
                     Parent root = (Parent) loader.load();
-
-
                     Controlleritem2 a = loader.getController();
-
                     System.out.println("bookid = "+ bookid1);
                     a.set_bookname(bookname);
                     a.set_bookwriter(bookwriter);
                     a.set_amanatdahande(amanatdahande);
                     a.set_vaziyat("mojod");
                     a.set_bookID(String.valueOf(bookid1));
-
-
                     //itemBookCtrl a = loader.getController();
-
-
                     nodes[i] = root;
                     //give the items some effect
-
                     nodes[i].setOnMouseEntered(event -> {
                         nodes[j].setStyle("-fx-background-color : #0A0E3F");
                     });
@@ -334,65 +369,16 @@ public class Controller implements Initializable {
         }
     }
 
-
-
-
-    ///////////////////////////////////////////
-    //item fxml controllers
-
-    @FXML
-    private HBox itemC;
-
-    public void btn_odat_clicked(ActionEvent actionEvent) {
-    }
-
-    /////////////////////////////////////////////////
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-        homeList();
-
-        }
-
-
-
-
-
-
-    public void handleClicks(ActionEvent actionEvent) {
-        if (actionEvent.getSource() == btnCustomers) {
-            pnlCustomer.setStyle("-fx-background-color : #1620A1");
-            pnlCustomer.toFront();
-        }
-        if (actionEvent.getSource() == btnMenus) {
-            pnlMenus.setStyle("-fx-background-color : #53639F");
-            pnlMenus.toFront();
-        }
-        if (actionEvent.getSource() == btnOverview) {
-            pnlOverview.setStyle("-fx-background-color : #02030A");
-            pnlOverview.toFront();
-        }
-        if(actionEvent.getSource()==btnOrders)
-        {
-            pnlOrders.setStyle("-fx-background-color : #464F67");
-            pnlOrders.toFront();
-        }
-    }
-
     public void btn_search_clicked(ActionEvent actionEvent) {
 
         
-    }
-
-    public void search_BL_field_action(ActionEvent actionEvent) {
     }
 
     public void btn_addBoock_clicked(ActionEvent actionEvent) {
         try {
             //اتصال به دیتابیس
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3306/databace_test?user=root";
+            String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
             Connection connect = DriverManager.getConnection(database);
             Statement state = connect.createStatement();
             try {
@@ -408,11 +394,12 @@ public class Controller implements Initializable {
             SimpleDateFormat fr = new SimpleDateFormat("yyyy/MM/dd");
             String dateformat = fr.format(date);
 
-//delete date_ms later if dont use
+            //delete date_ms later if dont use
             String addbook= "INSERT INTO books (name, writer , date, date_ms , amantdahande , mohlat , id)  values ('%s','%s','%s','%s','%s','%s','%d')";
             System.out.println("bookid = "+pnItems_booklist.getChildren().size());
 
             int book_id = pnItems_booklist.getChildren().size();
+            System.out.println("namebook = " + nameBook_field.getText() );
             //int book_id = Integer.parseInt(String.valueOf(state.executeQuery(getid)));
             addbook = String.format(addbook, nameBook_field.getText() , name_writer.getText() , dateformat ,date.getTime() , lbl_fullname.getText(), 10 , book_id );
             System.out.println(addbook);
@@ -426,8 +413,39 @@ public class Controller implements Initializable {
         booklists();
         nameBook_field.setText("");
         name_writer.setText("");
+    }
+
+    public void btn_amanatgiri_clicked(ActionEvent actionEvent) {
+        //txtField_bookid_foramanatgiri
+
+        String bookid = bookid_foramanatgiri.getText();
+        System.out.println("id in txtfield" + bookid);
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
+            Connection connect = DriverManager.getConnection(database);
+            Statement state = connect.createStatement();
+
+            String mysql = "SELECT id FROM books";
+            System.out.println(mysql);
+
+            state.execute(mysql);
+
+            //ResultSet result = state.executeQuery(mysql);
+            //int book_id = result.getInt("id");
+
+            String mysql1 = ("UPDATE books SET amantgirande = '"+lbl_fullname.getText()+"' where id="+ Integer.parseInt(bookid) );
+            System.out.println(mysql1);
+
+            state.execute(mysql1);
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
 
     }
+
     //جستجو در صفحه ی بوک لیست بر اساس نام کتاب
     public void btn_search_BkList_clicked(ActionEvent actionEvent) {
         String bookname = search_Bklist_txtfield.getText();
@@ -464,7 +482,6 @@ public class Controller implements Initializable {
 
                 //ست کردن دوباره ی جول نمایش کتاب ها بر اساس نام سرچ شده
                 try {
-
                     final int j = i;
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/item2.fxml"));
                     //nodes[i] = FXMLLoader.load(getClass().getResource("Item.fxml"));
@@ -497,24 +514,12 @@ public class Controller implements Initializable {
         }catch (Exception e){
             System.out.println(e);
         }
-
-
-
-
-
     }
 
     public void btn_info_clicked(ActionEvent actionEvent) {
         pane_Home.setVisible(false);
         pane_BooksList.setVisible(false);
         pane_Info.setVisible(true);
-    }
-
-    public void btn_BookList_clicked(ActionEvent actionEvent) {
-        pane_Info.setVisible(false);
-        pane_Home.setVisible(false);
-        pane_BooksList.setVisible(true);
-        booklists();
     }
 
     public void btn_Signout_clicked(ActionEvent actionEvent) throws IOException {
@@ -530,13 +535,6 @@ public class Controller implements Initializable {
 
     }
 
-    public void btn_Home_clicked(ActionEvent actionEvent) {
-        pane_BooksList.setVisible(false);
-        pane_Info.setVisible(false);
-        pane_Home.setVisible(true);
-        homeList();
-
-    }
 
     public void setLbl_name(String a) {
         this.lbl_name.setText(a);
@@ -569,78 +567,37 @@ public class Controller implements Initializable {
     public void setLbl_DateofRegis(String a) {
         this.lbl_DateofRegis.setText(a);
     }
-
-    @FXML
-    void btn_vorod_clicked(ActionEvent event) {
-        pane_BooksList.setVisible(false);
-        pane_Info.setVisible(false);
-        pane_Home.setVisible(true);
-        id = LoginPage2_Controller.get_id();
-        try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3306/databace_test?user=root";
-            Connection connect = DriverManager.getConnection(database);
-            Statement state = connect.createStatement();
-            String mysql = "SELECT name, family,username , password FROM person2 WHERE id ="+id;
-            System.out.println("mysql=" +mysql);
-            ResultSet result = state.executeQuery(mysql);
-            while (result.next()) {
-                //   String ID = result.getString("id");
-                String username = result.getString("username");
-                String password = result.getString("password");
-                String name = result.getString("name");
-                String family = result.getString("family");
-                String fullname = (name + " " + family);
-                System.out.println("fullname =" + fullname);
-                lbl_fullname.setText(fullname);
-                lbl_name.setText(name+" : نام");
-                lbl_family.setText(family+" : نام خانوادگی");
-                lbl_ID.setText("آی دی : "+id);
-                lbl_AccessLevel.setText("سطح دسترسی : کتابدار");
-                lbl_UserName.setText(username + " : نام کاربری");
-       //         setLbl_book_name();
-            }
-            }catch (Exception e){
-                System.out.println(e);
-            }
-        pane_vorod.setVisible(false);
-        leftPane.setVisible(true);
-        rightPane.setVisible(true);
-        homeList();
-    }
-
-
-    public void btn_amanatgiri_clicked(ActionEvent actionEvent) {
-        //txtField_bookid_foramanatgiri
-
-        String bookid = bookid_foramanatgiri.getText();
-        System.out.println("id in txtfield" + bookid);
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3306/databace_test?user=root";
-            Connection connect = DriverManager.getConnection(database);
-            Statement state = connect.createStatement();
-
-            String mysql = "SELECT id FROM books";
-            System.out.println(mysql);
-
-            state.execute(mysql);
-
-            //ResultSet result = state.executeQuery(mysql);
-            //int book_id = result.getInt("id");
-
-            String mysql1 = ("UPDATE books SET amantgirande = '"+lbl_fullname.getText()+"' where id="+ Integer.parseInt(bookid) );
-            System.out.println(mysql1);
-
-            state.execute(mysql1);
-
-            }catch (Exception e){
-                System.out.println(e);
-            }
-
-    }
-
-
 }
+
+
+
+
+
+
+
+
+
+
+/*
+    public void handleClicks(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == btn_home) {
+            btn_home.setStyle("-fx-background-color : #1620A1");
+            btn_home.toFront();
+        }
+        if (actionEvent.getSource() == btn_BookList) {
+            btn_BookList.setStyle("-fx-background-color : #53639F");
+            btn_BookList.toFront();
+        }
+        if (actionEvent.getSource() == btn_info) {
+            btn_info.setStyle("-fx-background-color : #02030A");
+            btn_info.toFront();
+        }
+        if(actionEvent.getSource()==btnSignout)
+        {
+            btnSignout.setStyle("-fx-background-color : #464F67");
+            btnSignout.toFront();
+        }
+    }
+
+ */
 
