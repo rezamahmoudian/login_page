@@ -175,7 +175,7 @@ public class Controller implements Initializable {
         id = LoginPage2_Controller.get_id();
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
+            String database = "jdbc:mysql://localhost:3307/databace_test?user=root&useUnicode=true&characterEncoding=UTF-8";
             Connection connect = DriverManager.getConnection(database);
             Statement state = connect.createStatement();
             String mysql = "SELECT name, family,username , password FROM person2 WHERE id ="+id;
@@ -229,7 +229,7 @@ public class Controller implements Initializable {
         try {
             //اتصال به دیتابیس
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
+            String database = "jdbc:mysql://localhost:3307/databace_test?user=root&useUnicode=true&characterEncoding=UTF-8";
             Connection connect = DriverManager.getConnection(database);
             Statement state = connect.createStatement();
             try {
@@ -307,7 +307,7 @@ public class Controller implements Initializable {
         try {
             //اتصال به دیتابیس
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
+            String database = "jdbc:mysql://localhost:3307/databace_test?user=root&useUnicode=true&characterEncoding=UTF-8";
             Connection connect = DriverManager.getConnection(database);
             Statement state = connect.createStatement();
             try {
@@ -378,7 +378,7 @@ public class Controller implements Initializable {
         try {
             //اتصال به دیتابیس
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
+            String database = "jdbc:mysql://localhost:3307/databace_test?user=root&useUnicode=true&characterEncoding=UTF-8";
             Connection connect = DriverManager.getConnection(database);
             Statement state = connect.createStatement();
             try {
@@ -423,7 +423,7 @@ public class Controller implements Initializable {
 
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
+            String database = "jdbc:mysql://localhost:3307/databace_test?user=root&useUnicode=true&characterEncoding=UTF-8";
             Connection connect = DriverManager.getConnection(database);
             Statement state = connect.createStatement();
 
@@ -455,13 +455,12 @@ public class Controller implements Initializable {
             Node[] nodes = new Node[1000];
 
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3306/databace_test?user=root";
+            String database = "jdbc:mysql://localhost:3306/databace_test?user=root&useUnicode=true&characterEncoding=UTF-8";
             Connection connect = DriverManager.getConnection(database);
             Statement state = connect.createStatement();
 
             String mysql = "SELECT id ,amantgirande ,  name, writer , date, date_ms , amantdahande , mohlat FROM books where name = "+ "\""+ bookname +"\"";
             System.out.println(mysql);
-
             ResultSet result = state.executeQuery(mysql);
 
             int i=0;
