@@ -16,6 +16,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -112,19 +114,11 @@ public class  LoginPage2_Controller {
         if(txt_Field_FirstName.getText().compareTo("")==0 || txt_Field_LastName.getText().compareTo("")==0 ||
                 txt_Field_Password_R.getText().compareTo("")==0 ||
                 txt_Field_ConfirmPassword.getText().compareTo("")==0){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("ERROR");
-            alert.setHeaderText(null);
-            alert.setContentText("complate all the fields");
-            alert.showAndWait();
+            alert.regis_fillall();
         }
         //چک کردن برابر بودن پسوورد و تاییدیه ی پسوورد
         else if(!(txt_Field_Password_R.getText().equals(txt_Field_ConfirmPassword.getText()))){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("ERROR");
-            alert.setHeaderText(null);
-            alert.setContentText("Enter confirmPassword correctly");
-            alert.showAndWait();
+            alert.regis_wrongconfirmpass();
         }
         else{
             //ست کردن یک نمونه از کلاس person با اطلاعات ثبت شده توسط کاربر
@@ -133,42 +127,16 @@ public class  LoginPage2_Controller {
             librarian1.setPassword(txt_Field_Password_R.getText());
             librarian1.setUsername(txt_Field_UserName_R.getText());
             System.out.println("Password =" +librarian1.getPassword());
-
+            Random rnd = new Random();
+            String id =String.valueOf(rnd.nextInt(1000));
+            System.out.println("id = "+id);
+            librarian1.setID(id);
         }
 
         try {
             //اتصال به دیتابیس
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
-            Connection connect = DriverManager.getConnection(database);
-            Statement state = connect.createStatement();
-            try {
-                //ساختن تیبل مورد نیاز در دیتابیس
-                String crtbl = "CREATE TABLE  IF NOT EXISTS person2 ( `id` VARCHAR(30) NOT NULL , `name` TEXT NOT NULL , `family` TEXT NOT NULL , `username` TEXT NOT NULL , `password` TEXT NOT NULL , PRIMARY KEY (`id`) ,UNIQUE (`UserName`))";
-                state.execute(crtbl);
-                //مشکل(ارور) در ثبت نام
-            }catch(Exception ex){
-                System.out.println(ex);
-                Alert alert2 = new Alert(Alert.AlertType.WARNING);
-                alert2.setTitle("ERROR");
-                alert2.setHeaderText(null);
-                alert2.setContentText("Registration Failed pleaes TryAgain");
-                alert2.showAndWait();
-            }
-            //ارسال اطلاعات ثبت نام به دیتابیس
-            Random rnd = new Random();
-            String id =String.valueOf(rnd.nextInt(1000));
-            System.out.println("id = "+id);
-            String setinfo = "INSERT INTO person2 (id ,name, family,username, password)  values ('%s','%s','%s','%s','%s')";
-            setinfo = String.format(setinfo, id, txt_Field_FirstName.getText(), txt_Field_LastName.getText(), txt_Field_UserName_R.getText(), txt_Field_Password_R.getText());
-            System.out.println(setinfo);
-
-            state.execute(setinfo);
-            state.close();
-            connect.close();
-            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-            alert2.setTitle("Registration");
-            alert2.setHeaderText(null);
+            Database.makeConnection();
+            Database.register_user(librarian1);
             //خالی کردن تکست فیلدها
             txt_Field_FirstName.setText("");
             txt_Field_LastName.setText("");
@@ -176,19 +144,13 @@ public class  LoginPage2_Controller {
             txt_Field_Password_R.setText("");
             txt_Field_ConfirmPassword.setText("");
 
-            alert2.setContentText("Successfully Registration!\nyour id is : "+id);
-            alert2.showAndWait();
             pane2.setVisible(false);
             pane1.setVisible(true);
             // مشکل در ثبت نام
         } catch (Exception e) {
             System.out.println(e);
             System.out.println(e);
-            Alert alert2 = new Alert(Alert.AlertType.WARNING);
-            alert2.setTitle("ERROR");
-            alert2.setHeaderText(null);
-            alert2.setContentText("Registration Failed pleaes TryAgain");
-            alert2.showAndWait();
+            alert.regis_Faild();
         }
     }
 
@@ -206,80 +168,44 @@ public class  LoginPage2_Controller {
     static String id;
     person librarian2 = new person();
     private double x, y;
-    public void press_Login_btn(ActionEvent actionEvent) {
+    public void press_Login_btn(ActionEvent actionEvent)  {
         //چک کردن پر بودن فیلد های مورد نیاز
-        if(txtfield_UserName.getText().equals("") || txtfield_Password.getText().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("ERROR");
-            alert.setHeaderText(null);
-            alert.setContentText("complate all the fields");
-            alert.showAndWait();
-        }
-        else{
+        boolean login = false;
+        if (txtfield_UserName.getText().equals("") || txtfield_Password.getText().equals("")) {
+            alert.login_fiilall();
+        } else {
             // کانکشن به دیتابیس
             try {
-                Class.forName("com.mysql.jdbc.Driver").newInstance();
-                String database = "jdbc:mysql://localhost:3307/databace_test?user=root";
-                Connection connect = DriverManager.getConnection(database);
-                Statement state = connect.createStatement();
-                String mysql = "SELECT id ,name, family,username , password FROM person2";
-                boolean login = false;
-                ResultSet result = state.executeQuery(mysql);
-                while(result.next()){
-                 //   String ID = result.getString("id");
-                    String username = result.getString("username");
-                    String password = result.getString("password");
-                    String name = result.getString("name");
-                    String family = result.getString("family");
-                //چک کردن درستی یوزرنیم و پسورد
-                    if(txtfield_UserName.getText().compareTo(username)==0 && txtfield_Password.getText().compareTo(password)==0){
-                 // ست کردن اطلاعات در کلاس person مطابق با اطلاعات کاربر
-                        login = true;
-                        id = result.getString("id");
-                        System.out.println("id geted from databace ="+id);
-                        librarian2.setFirstName(name);
-                        librarian2.setLastName(family);
-                        librarian2.setUsername(username);
-                        librarian2.setPassword(password);
+                Database.makeConnection();
+            login = Database.login_user(txtfield_UserName.getText(), txtfield_Password.getText());
 
-                        Alert alert5 = new Alert(Alert.AlertType.INFORMATION);
-                        alert5.setTitle("Hey You");
-                        alert5.setContentText("Welcome to YAR ");
-                        alert5.showAndWait();
+            if (login == true) {
+                alert.login_successful();
+                // بستن لاگین پیج و باز شدن صفحه ی اصلی برنامه
+                Stage stage = (Stage) btn_Login.getScene().getWindow();
+                stage.close();
+                Database.closeConnection();
+                Stage primaryStage = new Stage();
+                AnchorPane root = null;
+                try {
+                    root = (AnchorPane) FXMLLoader.load(getClass().getResource("../fxml/Home.fxml"));
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                Scene scene = new Scene(root, 1050, 576);
+                primaryStage.setScene(scene);
+                primaryStage.initStyle(StageStyle.UNDECORATED);
+                primaryStage.show();
+            }
 
-                        //////////////////////////////////////////
-                        // بستن لاگین پیج و باز شدن صفحه ی اصلی برنامه
-                        Stage stage = (Stage) btn_Login.getScene().getWindow();
-                        stage.close();
-                        connect.close();
-                        Stage primaryStage = new Stage();
-                        AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("../fxml/Home.fxml"));
-                        Scene scene = new Scene(root ,1050 ,576 );
-                        primaryStage.setScene(scene);
-                        primaryStage.initStyle(StageStyle.UNDECORATED);
-                        primaryStage.show();
-                        break;
-                    }
-                }
-                state.close();
-                connect.close();
-                //آلارم غلط بودن یوزر یا پسوورد
-                if (login==false){
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("ERROR");
-                    alert.setHeaderText(null);
-                    alert.setContentText("username or password is wrong");
-                    alert.showAndWait();
-                    txtfield_Password.setText("");
-                }
-                //مشکل و ارور در لاگین
-            }catch(Exception e) {
-                System.out.println(e);
-                Alert alert2 = new Alert(Alert.AlertType.WARNING);
-                alert2.setTitle("ERROR");
-                alert2.setHeaderText(null);
-                alert2.setContentText("Login Failed pleaes TryAgain");
-                alert2.showAndWait();
+        //آلارم غلط بودن یوزر یا پسوورد
+        else if (login == false) {
+            alert.login_wrong();
+            txtfield_Password.setText("");
+        }
+        //مشکل و ارور در لاگین
+    }catch(Exception e) {
+                alert.login_error();
 
             }
         }
