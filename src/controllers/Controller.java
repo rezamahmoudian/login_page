@@ -191,7 +191,7 @@ public class Controller implements Initializable {
         pane_vorod.setVisible(false);
         leftPane.setVisible(true);
         rightPane.setVisible(true);
-       // homeList();
+        homeList();
     }
 
 
@@ -213,7 +213,6 @@ public class Controller implements Initializable {
         pnItems.getChildren().clear();
 
         int i = 0;
-
         try {
             //اتصال به دیتابیس
             Database.makeConnection();
@@ -221,8 +220,8 @@ public class Controller implements Initializable {
             Database.create_book_table();
 
             String amanatgirande = lbl_fullname.getText();
-
-            showbooks_homepage(Database.create_HomeList(amanatgirande));
+            String mysql = "SELECT id ,amantgirande ,  name, writer , date, date_ms , amantdahande , mohlat FROM books where amantgirande = " + "\"" + amanatgirande + "\"";
+            showbooks_homepage(Database.create_bookList(mysql));
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -231,7 +230,6 @@ public class Controller implements Initializable {
     }
 
     public void showbooks_homepage(List <Books> books) {
-        System.out.println("books  " + books);
         pnItems.getChildren().clear();
         Node[] nodes = new Node[1000];
         int i = 0;
@@ -261,64 +259,21 @@ public class Controller implements Initializable {
             }
         }
     }
-
-
-        public void btn_BookList_clicked(ActionEvent actionEvent) {
-        pane_Info.setVisible(false);
-        pane_Home.setVisible(false);
-        pane_BooksList.setVisible(true);
-        booklists();
-    }
-
-
-    public void booklists(){
-        pnItems_booklist.getChildren().clear();
+    public void showbooks(List<Books> books){
+        System.out.println("books    " + books);
+        pnItems.getChildren().clear();
         Node[] nodes = new Node[1000];
-
-        try {
-            //اتصال به دیتابیس
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3306/databace_test?user=root&useUnicode=true&characterEncoding=UTF-8";
-            Connection connect = DriverManager.getConnection(database);
-            Statement state = connect.createStatement();
+        int i = 0;
+        if(books != null) {
             try {
-                //ساختن تیبل مورد نیاز در دیتابیس
-                String crtbl = "CREATE TABLE  IF NOT EXISTS `databace_test`.`books` ( `id` INT NOT NULL , `amantgirande` TEXT , `name` TEXT NOT NULL ,  `writer` TEXT NOT NULL ,  `date` TEXT NOT NULL ,  `amantdahande` TEXT NOT NULL ,  `date_ms` BIGINT NOT NULL ,  `mohlat` INT NOT NULL , PRIMARY KEY (`id`) ) ENGINE = InnoDB";
-                state.execute(crtbl);
-            } catch (Exception ex) {
-                System.out.println(ex);
-            }
-            String mysql = "SELECT id , amantgirande,  name, writer , date, date_ms , amantdahande , mohlat FROM books";
-            System.out.println(mysql);
-            ResultSet result = state.executeQuery(mysql);
-            int i=0;
-            while (result.next()) {
-                String bookname = result.getString("name");
-                String bookwriter = result.getString("writer");
-                String date = result.getString("date");
-                long date_ms = result.getLong("date_ms");
-                String amanatdahande = result.getString("amantdahande");
-                String amanatgirande = result.getString("amantgirande");
-                Date date1 = new Date();
-                long tenday = 86400000;
-                int bookid1 = result.getInt("id");
-
-                long mohlat = date_ms + tenday - date1.getTime();
-                mohlat = (mohlat / 8640000) + 1;
-                try {
+                for (Books book : books) {
                     final int j = i;
-                    //FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/itemBook.fxml"));
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/item2.fxml"));
-                    //nodes[i] = FXMLLoader.load(getClass().getResource("Item.fxml"));
                     Parent root = (Parent) loader.load();
-                    Controlleritem2 a = loader.getController();
-                    System.out.println("bookid = "+ bookid1);
-                    a.set_bookname(bookname);
-                    a.set_bookwriter(bookwriter);
-                    a.set_amanatdahande(amanatdahande);
-                    a.set_vaziyat("mojod");
-                    a.set_bookID(String.valueOf(bookid1));
-                    //itemBookCtrl a = loader.getController();
+                    Controlleritem2 bookitem = loader.getController();
+
+                    bookitem.set_items(book);
+
                     nodes[i] = root;
                     //give the items some effect
                     nodes[i].setOnMouseEntered(event -> {
@@ -328,16 +283,42 @@ public class Controller implements Initializable {
                         nodes[j].setStyle("-fx-background-color : #02030A");
                     });
                     pnItems_booklist.getChildren().add(nodes[i]);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    i++;
+                    System.out.println(i);
                 }
-                i++;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            state.close();
-            connect.close();
+        }
+
+    }
+
+
+        public void btn_BookList_clicked(ActionEvent actionEvent) throws ClassNotFoundException {
+        pane_Info.setVisible(false);
+        pane_Home.setVisible(false);
+        pane_BooksList.setVisible(true);
+        booklists();
+    }
+
+
+    public void booklists() throws ClassNotFoundException {
+        pnItems_booklist.getChildren().clear();
+        try {
+            //اتصال به دیتابیس
+            Database.makeConnection();
+            //ساختن تیبل مورد نیاز در دیتابیس
+            Database.create_book_table();
+            String mysql = "SELECT id , amantgirande,  name, writer , date, date_ms , amantdahande , mohlat FROM books";
+            showbooks(Database.create_bookList(mysql));
+
+            Database.getStatement().close();
+            Database.closeConnection();
+
         } catch (Exception e) {
             System.out.println(e);
         }
+
     }
 
     public void btn_search_clicked(ActionEvent actionEvent) {
@@ -345,40 +326,22 @@ public class Controller implements Initializable {
         
     }
 
-    public void btn_addBoock_clicked(ActionEvent actionEvent) {
+    public void btn_addBoock_clicked(ActionEvent actionEvent) throws ClassNotFoundException {
+        Books book = new Books();
         try {
             //اتصال به دیتابیس
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3306/databace_test?user=root&useUnicode=true&characterEncoding=UTF-8";
-            Connection connect = DriverManager.getConnection(database);
-            Statement state = connect.createStatement();
-            try {
-                //ساختن تیبل مورد نیاز در دیتابیس
-                String crtbl = "CREATE TABLE  IF NOT EXISTS `databace_test`.`books` ( `id` INT NOT NULL , `amantgirande` TEXT , `name` TEXT NOT NULL ,  `writer` TEXT NOT NULL ,  `date` TEXT NOT NULL ,  `amantdahande` TEXT NOT NULL ,  `date_ms` BIGINT NOT NULL ,  `mohlat` INT NOT NULL , PRIMARY KEY (`id`) ) ENGINE = InnoDB";
-                state.execute(crtbl);
-                //مشکل(ارور)
-            }catch(Exception ex) {
-                System.out.println(ex);
-            }
+            Database.makeConnection();
+            Database.getStatement();
+            //ساختن تیبل مورد نیاز در دیتابیس
+            Database.create_book_table();
+            //مشکل(ارور)
+            book.setName(nameBook_field.getText());
+            book.setWriter(name_writer.getText());
+            book.setName_ehdakonande(lbl_fullname.getText());
 
-            Date date = new Date();
-            SimpleDateFormat fr = new SimpleDateFormat("yyyy/MM/dd");
-            String dateformat = fr.format(date);
+            Database.add_book(book);
 
-            //delete date_ms later if dont use
-            String addbook= "INSERT INTO books (name, writer , date, date_ms , amantdahande , mohlat , id)  values ('%s','%s','%s','%s','%s','%s','%d')";
-            System.out.println("bookid = "+pnItems_booklist.getChildren().size());
-
-            int book_id = pnItems_booklist.getChildren().size();
-            System.out.println("namebook = " + nameBook_field.getText() );
-            //int book_id = Integer.parseInt(String.valueOf(state.executeQuery(getid)));
-            addbook = String.format(addbook, nameBook_field.getText() , name_writer.getText() , dateformat ,date.getTime() , lbl_fullname.getText(), 10 , book_id );
-            System.out.println(addbook);
-            state.execute(addbook);
-
-            state.close();
-            connect.close();
-        }catch (Exception e){
+        }catch (Exception e) {
             System.out.println(e);
         }
         booklists();

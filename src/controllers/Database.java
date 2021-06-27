@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -160,13 +161,13 @@ public class Database {
     }
 
 
-    public static List<Books> create_HomeList(String txtamanatgirande) {
+    public static List<Books> create_bookList(String sql) {
 
         List<Books> booklist1 = null;
         try {
-            String mysql = "SELECT id ,amantgirande ,  name, writer , date, date_ms , amantdahande , mohlat FROM books where amantgirande = " + "\"" + txtamanatgirande + "\"";
-            System.out.println(mysql);
-            ResultSet result = Database.statement.executeQuery(mysql);
+            //String mysql = "SELECT id ,amantgirande ,  name, writer , date, date_ms , amantdahande , mohlat FROM books where amantgirande = " + "\"" + txtamanatgirande + "\"";
+            System.out.println(sql);
+            ResultSet result = Database.statement.executeQuery(sql);
             int i = 0;
             booklist1 = new ArrayList<>();
             while (result.next()) {
@@ -175,7 +176,7 @@ public class Database {
                 String bookwriter = result.getString("writer");
                 String date = result.getString("date");
                 long date_ms = result.getLong("date_ms");
-                String amanatdahande = result.getString("amantdahande");
+                String ehdakonande = result.getString("amantdahande");
                 String amanatgirande = result.getString("amantgirande");
                 java.util.Date date1 = new Date();
                 long tenday = 86400000;
@@ -188,7 +189,9 @@ public class Database {
                 book.setDate(date);
                 book.setMohlat(mohlat);
                 book.setId(bookid);
+                book.setName_ehdakonande(ehdakonande);
                 booklist1.add(book);
+
             }
 
         } catch (Exception e) {
@@ -200,6 +203,25 @@ public class Database {
     }
 
 
+    public static void add_book(Books book) throws SQLException {
+        Date date = new Date();
+        SimpleDateFormat fr = new SimpleDateFormat("yyyy/MM/dd");
+        String dateformat = fr.format(date);
+
+        //delete date_ms later if dont use
+        String addbook= "INSERT INTO books (name, writer , date, date_ms , amantdahande , mohlat , id)  values ('%s','%s','%s','%s','%s','%s','%d')";
+
+        Random rnd = new Random();
+        int book_id = rnd.nextInt(1000);
+        System.out.println("bookid = "+book_id);
+        System.out.println("namebook = " + book.getName() );
+        //int book_id = Integer.parseInt(String.valueOf(state.executeQuery(getid)));
+        addbook = String.format(addbook, book.getName() , book.getWriter() , dateformat ,date.getTime() , book.getName_ehdakonande() , 10 , book_id );
+        System.out.println(addbook);
+        Database.getStatement().execute(addbook);
+
+        Database.closeConnection();
+    }
 
 
 

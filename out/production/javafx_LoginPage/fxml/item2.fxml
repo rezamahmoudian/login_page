@@ -21,7 +21,7 @@
                 <Insets />
             </HBox.margin>
         </Label>
-        <Label fx:id="item2_amanatdahande" alignment="CENTER" prefHeight="21.0" prefWidth="188.0" text="امانت دهنده" textFill="#b7c3d7">
+        <Label fx:id="item2_ehdakonande" alignment="CENTER" prefHeight="21.0" prefWidth="188.0" text="امانت دهنده" textFill="#b7c3d7">
             <HBox.margin>
                 <Insets />
             </HBox.margin>
