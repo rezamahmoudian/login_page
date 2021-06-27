@@ -1,5 +1,7 @@
 package controllers;
 
+import classes.Books;
+import classes.person;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
@@ -43,7 +45,7 @@ public class Controller implements Initializable {
     private JFXButton btn_vorod;
 
     @FXML
-    private VBox pnItems = null;
+    public VBox pnItems = null;
 
     @FXML
     private VBox pnItems_booklist = null;
@@ -152,7 +154,7 @@ public class Controller implements Initializable {
 
     @FXML
     private TextField search_field;
-/////////
+    /////////
     @FXML
     private Label lbl_list;
 
@@ -165,46 +167,31 @@ public class Controller implements Initializable {
     @FXML
     private JFXListView<String> listView_Home;
 
-    final ObservableList<String>bookInfo = FXCollections.observableArrayList();
-
-
+    final ObservableList<String> bookInfo = FXCollections.observableArrayList();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        id = LoginPage2_Controller.get_id();
+        person person1 = new person();
+
         try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3306/databace_test?user=root&useUnicode=true&characterEncoding=UTF-8";
-            Connection connect = DriverManager.getConnection(database);
-            Statement state = connect.createStatement();
-            String mysql = "SELECT name, family,username , password FROM person2 WHERE id ="+id;
-            System.out.println("mysql=" +mysql);
-            ResultSet result = state.executeQuery(mysql);
-            while (result.next()) {
-                //   String ID = result.getString("id");
-                String username = result.getString("username");
-                String password = result.getString("password");
-                String name = result.getString("name");
-                String family = result.getString("family");
-                String fullname = (name + " " + family);
-                System.out.println("fullname =" + fullname);
-                lbl_fullname.setText(fullname);
-                lbl_name.setText(name+" : نام");
-                lbl_family.setText(family+" : نام خانوادگی");
-                lbl_ID.setText("آی دی : "+id);
-                lbl_AccessLevel.setText("سطح دسترسی : کتابدار");
-                lbl_UserName.setText(username + " : نام کاربری");
-                //         setLbl_book_name();
-            }
-        }catch (Exception e){
-            System.out.println(e);
+            Database.makeConnection();
+            person1 = Database.set_home_items();
+            Database.closeConnection();
+            lbl_fullname.setText(person1.getFullname());
+            lbl_name.setText(person1.getFirstName() + " : نام");
+            lbl_family.setText(person1.getLastName() + " : نام خانوادگی");
+            lbl_ID.setText("آی دی : " + person1.getID());
+            lbl_AccessLevel.setText("سطح دسترسی : کتابدار");
+            lbl_UserName.setText(person1.getUsername() + " : نام کاربری");
+        } catch (ClassNotFoundException classNotFoundException) {
+            classNotFoundException.printStackTrace();
         }
+        //
         pane_vorod.setVisible(false);
         leftPane.setVisible(true);
         rightPane.setVisible(true);
-        homeList();
-
+       // homeList();
     }
 
 
@@ -222,57 +209,43 @@ public class Controller implements Initializable {
         homeList();
     }
 
-    public void homeList(){
+    public void homeList() {
         pnItems.getChildren().clear();
-        Node[] nodes = new Node[1000];
-        // for (int i = 0; i < nodes.length; i++) {
+
+        int i = 0;
+
         try {
             //اتصال به دیتابیس
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String database = "jdbc:mysql://localhost:3306/databace_test?user=root&useUnicode=true&characterEncoding=UTF-8";
-            Connection connect = DriverManager.getConnection(database);
-            Statement state = connect.createStatement();
+            Database.makeConnection();
+            //ساختن تیبل مورد نیاز در دیتابیس
+            Database.create_book_table();
+
+            String amanatgirande = lbl_fullname.getText();
+
+            showbooks_homepage(Database.create_HomeList(amanatgirande));
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        Database.closeConnection();
+    }
+
+    public void showbooks_homepage(List <Books> books) {
+        System.out.println("books  " + books);
+        pnItems.getChildren().clear();
+        Node[] nodes = new Node[1000];
+        int i = 0;
+        if(books != null) {
             try {
-                //ساختن تیبل مورد نیاز در دیتابیس
-                String crtbl = "CREATE TABLE  IF NOT EXISTS `databace_test`.`books` (`id` INT NOT NULL , `amantgirande` TEXT , `name` TEXT NOT NULL ,  `writer` TEXT NOT NULL ,  `date` TEXT NOT NULL ,  `amantdahande` TEXT NOT NULL ,  `date_ms` BIGINT NOT NULL ,  `mohlat` INT NOT NULL , PRIMARY KEY (`id`) ) ENGINE = InnoDB";
-                state.execute(crtbl);
-            } catch (Exception ex) {
-                System.out.println(ex);
-            }
-            String mysql = "SELECT id ,amantgirande ,  name, writer , date, date_ms , amantdahande , mohlat FROM books where amantgirande = "+ "\"" +lbl_fullname.getText()+"\"";
-            System.out.println(mysql);
-            ResultSet result = state.executeQuery(mysql);
-            int i=0;
-            while (result.next()) {
-                int bookid = result.getInt("id");
-                String bookname = result.getString("name");
-                String bookwriter = result.getString("writer");
-                String date = result.getString("date");
-                long date_ms = result.getLong("date_ms");
-                String amanatdahande = result.getString("amantdahande");
-                String amanatgirande = result.getString("amantgirande");
-                Date date1 = new Date();
-                long tenday = 86400000;
-                long mohlat = date_ms + tenday - date1.getTime();
-                mohlat = (mohlat / 8640000) + 1;
-
-                try {
-
+                for (Books book : books) {
                     final int j = i;
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/item.fxml"));
-                    //nodes[i] = FXMLLoader.load(getClass().getResource("Item.fxml"));
                     Parent root = (Parent) loader.load();
-
-                    Controlleritem a = loader.getController();
-                    a.setname(bookname);
-                    a.setwriter(bookwriter);
-                    a.setdate(date);
-                    a.setmohlat(String.valueOf(mohlat));
-                    a.set_bookID(String.valueOf(bookid));
+                    Controlleritem bookitem = loader.getController();
+                    bookitem.setitems(book);
 
                     nodes[i] = root;
                     //give the items some effect
-
                     nodes[i].setOnMouseEntered(event -> {
                         nodes[j].setStyle("-fx-background-color : #0A0E3F");
                     });
@@ -280,19 +253,17 @@ public class Controller implements Initializable {
                         nodes[j].setStyle("-fx-background-color : #02030A");
                     });
                     pnItems.getChildren().add(nodes[i]);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    i++;
+                    System.out.println(i);
                 }
-                i++;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            state.close();
-            connect.close();
-        } catch (Exception e) {
-            System.out.println(e);
         }
     }
 
-    public void btn_BookList_clicked(ActionEvent actionEvent) {
+
+        public void btn_BookList_clicked(ActionEvent actionEvent) {
         pane_Info.setVisible(false);
         pane_Home.setVisible(false);
         pane_BooksList.setVisible(true);

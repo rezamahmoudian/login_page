@@ -1,5 +1,6 @@
 package controllers;
 
+import classes.Books;
 import classes.person;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -9,7 +10,9 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 public class Database {
@@ -106,7 +109,7 @@ public class Database {
                     // ست کردن اطلاعات در کلاس person مطابق با اطلاعات کاربر
                     login = true;
                     String id = result.getString("id");
-  //                  LoginPage2_Controller.set_id(id);
+                    LoginPage2_Controller.set_id(id);
                     System.out.println("id geted from databace =" + id);
                     break;
                 }
@@ -134,10 +137,10 @@ public class Database {
             String family = result.getString("family");
             String fullname = (name + " " + family);
             System.out.println("fullname =" + fullname);
-   //         person1.setFullname(fullname);
+            person1.setFullname(fullname);
             person1.setFirstName(name);
             person1.setLastName(family );
-            person1.setID("آی دی : " + id);
+            person1.setID( id);
             person1.setUsername(username);
         } catch (Exception e) {
             System.out.println(e);
@@ -150,67 +153,53 @@ public class Database {
         try {
             //ساختن تیبل مورد نیاز در دیتابیس
             String crtbl = "CREATE TABLE  IF NOT EXISTS `databace_test`.`books` (`id` INT NOT NULL , `amantgirande` TEXT , `name` TEXT NOT NULL ,  `writer` TEXT NOT NULL ,  `date` TEXT NOT NULL ,  `amantdahande` TEXT NOT NULL ,  `date_ms` BIGINT NOT NULL ,  `mohlat` INT NOT NULL , PRIMARY KEY (`id`) ) ENGINE = InnoDB";
-            Database.statement.executeQuery(crtbl);
+            Database.statement.execute(crtbl);
         } catch (Exception ex) {
             System.out.println(ex);
         }
     }
 
 
-    public static void create_HomeList(String txtamanatgirande , VBox pnitem){
-        Node[] nodes = new Node[1000];
+    public static List<Books> create_HomeList(String txtamanatgirande) {
 
-        try{
-        String mysql = "SELECT id ,amantgirande ,  name, writer , date, date_ms , amantdahande , mohlat FROM books where amantgirande = "+ "\"" +txtamanatgirande+"\"";
-        System.out.println(mysql);
-        ResultSet result = Database.statement.executeQuery(mysql);
-        int i=0;
-        while (result.next()) {
-            int bookid = result.getInt("id");
-            String bookname = result.getString("name");
-            String bookwriter = result.getString("writer");
-            String date = result.getString("date");
-            long date_ms = result.getLong("date_ms");
-            String amanatdahande = result.getString("amantdahande");
-            String amanatgirande = result.getString("amantgirande");
-            java.util.Date date1 = new Date();
-            long tenday = 86400000;
-            long mohlat = date_ms + tenday - date1.getTime();
-            mohlat = (mohlat / 8640000) + 1;
-            try {
-                final int j = i;
-                FXMLLoader loader = new FXMLLoader(Controlleritem.class.getResource("../fxml/item.fxml"));
-                //nodes[i] = FXMLLoader.load(getClass().getResource("Item.fxml"));
-                Parent root = (Parent) loader.load();
+        List<Books> booklist1 = null;
+        try {
+            String mysql = "SELECT id ,amantgirande ,  name, writer , date, date_ms , amantdahande , mohlat FROM books where amantgirande = " + "\"" + txtamanatgirande + "\"";
+            System.out.println(mysql);
+            ResultSet result = Database.statement.executeQuery(mysql);
+            int i = 0;
+            booklist1 = new ArrayList<>();
+            while (result.next()) {
+                int bookid = result.getInt("id");
+                String bookname = result.getString("name");
+                String bookwriter = result.getString("writer");
+                String date = result.getString("date");
+                long date_ms = result.getLong("date_ms");
+                String amanatdahande = result.getString("amantdahande");
+                String amanatgirande = result.getString("amantgirande");
+                java.util.Date date1 = new Date();
+                long tenday = 86400000;
+                long mohlat = date_ms + tenday - date1.getTime();
+                mohlat = (mohlat / 8640000) + 1;
 
-                Controlleritem a = loader.getController();
-                a.setname(bookname);
-                a.setwriter(bookwriter);
-                a.setdate(date);
-                a.setmohlat(String.valueOf(mohlat));
-                a.set_bookID(String.valueOf(bookid));
-
-                nodes[i] = root;
-                //give the items some effect
-
-                nodes[i].setOnMouseEntered(event -> {
-                    nodes[j].setStyle("-fx-background-color : #0A0E3F");
-                });
-                nodes[i].setOnMouseExited(event -> {
-                    nodes[j].setStyle("-fx-background-color : #02030A");
-                });
-                pnitem.getChildren().add(nodes[i]);
-            } catch (IOException e) {
-                e.printStackTrace();
+                Books book = new Books();
+                book.setName(bookname);
+                book.setWriter(bookwriter);
+                book.setDate(date);
+                book.setMohlat(mohlat);
+                book.setId(bookid);
+                booklist1.add(book);
             }
-            i++;
+
+        } catch (Exception e) {
+            System.out.println(e);
         }
-    } catch (Exception e) {
-        System.out.println(e);
+        System.out.println(booklist1);
+        return booklist1;
+
     }
 
 
-    }
 
 
 

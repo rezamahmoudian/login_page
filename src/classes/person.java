@@ -6,6 +6,7 @@ public class person {
     private String ID;
     private String password;
     private String username;
+    private String fullname;
 
     public String getUsername() {
         return username;
@@ -50,5 +51,11 @@ public class person {
     }
 
 
+    public String getFullname() {
+        return fullname;
+    }
 
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
 }

@@ -2,12 +2,13 @@ package classes;
 
 import java.util.Date;
 
-public class personbooks {
+public class Books {
     private String name;
     private String name_amantdahande;
     private String writer;
-    private String mohlat;
-    private Date date;
+    private long mohlat;
+    private String date;
+    private int id;
 
 
     public String getName() {
@@ -34,21 +35,28 @@ public class personbooks {
         this.writer = writer;
     }
 
-    public String getMohlat() {
+    public long getMohlat() {
         return mohlat;
     }
 
-    public void setMohlat(String mohlat) {
+    public void setMohlat(long mohlat) {
         this.mohlat = mohlat;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
 
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

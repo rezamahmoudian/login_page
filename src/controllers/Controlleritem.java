@@ -1,5 +1,6 @@
 package controllers;
 
+import classes.Books;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -32,6 +33,15 @@ public class Controlleritem implements Initializable {
 
     @FXML
     private Label item_bookID;
+
+    public void setitems(Books book){
+        item_bookID.setText(String.valueOf(book.getId()));
+        item_date.setText(book.getDate());
+        item_mohlat.setText(String.valueOf(book.getMohlat()));
+        item_namebook.setText(book.getName());
+        item_writername.setText(book.getWriter());
+    }
+
 
     public void setname(String a){
         item_namebook.setText(a);

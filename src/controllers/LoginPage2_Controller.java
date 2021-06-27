@@ -215,5 +215,8 @@ public class  LoginPage2_Controller {
         System.out.println("returned id ="+ id);
         return id;
     }
+    public static void set_id(String ID){
+        id = ID;
+    }
 
 }
