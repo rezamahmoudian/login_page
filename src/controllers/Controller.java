@@ -216,7 +216,6 @@ public class Controller implements Initializable {
             Database.makeConnection();
             //ساختن تیبل مورد نیاز در دیتابیس
             Database.create_book_table();
-
             String amanatgirande = lbl_fullname.getText();
             String mysql = "SELECT id ,amantgirande ,  name, writer , date, date_ms , amantdahande , mohlat FROM books where amantgirande = " + "\"" + amanatgirande + "\"";
             showbooks_homepage(Database.create_bookList(mysql));
@@ -269,10 +268,9 @@ public class Controller implements Initializable {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/item2.fxml"));
                     Parent root = (Parent) loader.load();
                     Controlleritem2 bookitem = loader.getController();
-
                     bookitem.set_items(book);
-
                     nodes[i] = root;
+
                     //give the items some effect
                     nodes[i].setOnMouseEntered(event -> {
                         nodes[j].setStyle("-fx-background-color : #0A0E3F");
@@ -290,7 +288,6 @@ public class Controller implements Initializable {
         }
 
     }
-
         public void btn_BookList_clicked(ActionEvent actionEvent) throws ClassNotFoundException {
         pane_Info.setVisible(false);
         pane_Home.setVisible(false);
@@ -298,25 +295,20 @@ public class Controller implements Initializable {
         booklists();
     }
 
-
     public void booklists() throws ClassNotFoundException {
         pnItems_booklist.getChildren().clear();
         try {
             //اتصال به دیتابیس
             Database.makeConnection();
             //ساختن تیبل مورد نیاز در دیتابیس
-
             Database.create_book_table();
             String mysql = "SELECT id , amantgirande,  name, writer , date, date_ms , amantdahande , mohlat FROM books";
             showbooks(Database.create_bookList(mysql));
-
             Database.getStatement().close();
             Database.closeConnection();
-
         } catch (Exception e) {
             System.out.println(e);
         }
-
     }
 
     public void btn_search_clicked(ActionEvent actionEvent) {
@@ -324,27 +316,11 @@ public class Controller implements Initializable {
         
     }
 
-    public void btn_addBoock_clicked(ActionEvent actionEvent) throws ClassNotFoundException {
-        Books book = new Books();
-        try {
-            //اتصال به دیتابیس
-            Database.makeConnection();
-            Database.getStatement();
-            //ساختن تیبل مورد نیاز در دیتابیس
-            Database.create_book_table();
-            //مشکل(ارور)
-            book.setName(nameBook_field.getText());
-            book.setWriter(name_writer.getText());
-            book.setName_ehdakonande(lbl_fullname.getText());
+    public void btn_addBoock_clicked(ActionEvent actionEvent) throws ClassNotFoundException, IOException {
+        addBookPage addBookPage = new addBookPage();
+        addBookPage.showpage(lbl_fullname.getText());
 
-            Database.add_book(book);
-
-        }catch (Exception e) {
-            System.out.println(e);
-        }
         booklists();
-        nameBook_field.setText("");
-        name_writer.setText("");
     }
 
     public void btn_amanatgiri_clicked(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {

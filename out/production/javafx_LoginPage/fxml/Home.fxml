@@ -185,7 +185,7 @@
             </Pane>
             <Pane fx:id="pane_BooksList" prefHeight="576.0" prefWidth="699.0" stylesheets="@../styles/style.css">
                <children>
-                  <TextField fx:id="search_Bklist_txtfield" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="26.0" prefHeight="27.0" prefWidth="183.0" promptText="جستجو" style="-fx-background-color: #02030A; -fx-border-color: #B7C3D7; -fx-border-radius: 2em;" />
+                  <TextField fx:id="search_Bklist_txtfield" alignment="CENTER_RIGHT" layoutX="296.0" layoutY="30.0" prefHeight="27.0" prefWidth="183.0" promptText="جستجو" style="-fx-background-color: #02030A; -fx-border-color: #B7C3D7; -fx-border-radius: 2em;" />
                   <Label layoutX="520.0" layoutY="26.0" text="لیست کتاب های کتابخانه" textFill="#e7e5e5">
                      <font>
                         <Font size="24.0" />
@@ -241,46 +241,42 @@
                         </VBox>
                      </content>
                   </ScrollPane>
-                  <ImageView fitHeight="17.0" fitWidth="16.0" layoutX="57.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="17.0" fitWidth="16.0" layoutX="308.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/icons8_Search_52px.png" />
                      </image>
                   </ImageView>
-                  <TextField fx:id="nameBook_field" alignment="CENTER_RIGHT" layoutX="340.0" layoutY="80.0" prefHeight="33.0" prefWidth="165.0" promptText="نام کتاب" style="-fx-background-color: #02030A; -fx-border-color: #B7C3D7; -fx-border-radius: 2em;" />
-                  <Label layoutX="535.0" layoutY="83.0" text=" :اهدای کتاب جدید به کتابخانه" textFill="WHITE">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="name_writer" alignment="CENTER_RIGHT" layoutX="152.0" layoutY="80.0" prefHeight="33.0" prefWidth="165.0" promptText="نام نویسنده" style="-fx-background-color: #02030A; -fx-border-color: #B7C3D7; -fx-border-radius: 2em;" />
-                  <Button fx:id="btn_addBoock" layoutX="45.0" layoutY="80.0" mnemonicParsing="false" onAction="#btn_addBoock_clicked" prefHeight="33.0" prefWidth="76.0" style="-fx-border-color: #2A73FF; -fx-border-radius: 20; -fx-background-color: transparent;" styleClass="button_Home" stylesheets="@../styles/style.css" text="اهدا">
+                  <Button fx:id="btn_addBoock" layoutX="25.0" layoutY="14.0" mnemonicParsing="false" onAction="#btn_addBoock_clicked" prefHeight="48.0" prefWidth="116.0" style="-fx-border-color: #2A73FF; -fx-border-radius: 20; -fx-background-color: transparent;" styleClass="button_Home" stylesheets="@../styles/style.css" text="اهدای کتاب">
                      <cursor>
                         <Cursor fx:constant="HAND" />
-                     </cursor></Button>
-                  <JFXButton fx:id="btn_search_BkList" layoutX="53.0" layoutY="28.0" onAction="#btn_search_BkList_clicked" prefHeight="31.0" prefWidth="24.0" text=" ">
+                     </cursor>
+                     <font>
+                        <Font size="18.0" />
+                     </font></Button>
+                  <JFXButton fx:id="btn_search_BkList" layoutX="304.0" layoutY="28.0" onAction="#btn_search_BkList_clicked" prefHeight="31.0" prefWidth="24.0" text=" ">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></JFXButton>
-                  <Button fx:id="btn_amanatgiri" layoutX="214.0" layoutY="133.0" mnemonicParsing="false" onAction="#btn_amanatgiri_clicked" prefHeight="33.0" prefWidth="97.0" style="-fx-border-color: #2A73FF; -fx-border-radius: 20; -fx-background-color: transparent;" styleClass="button_Home" stylesheets="@../styles/style.css" text="امانت گیری">
+                  <Button fx:id="btn_amanatgiri" layoutX="187.0" layoutY="105.0" mnemonicParsing="false" onAction="#btn_amanatgiri_clicked" prefHeight="33.0" prefWidth="97.0" style="-fx-border-color: #2A73FF; -fx-border-radius: 20; -fx-background-color: transparent;" styleClass="button_Home" stylesheets="@../styles/style.css" text="امانت گیری">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Label alignment="CENTER_RIGHT" layoutX="535.0" layoutY="136.0" prefHeight="27.0" prefWidth="205.0" text=" :امانت گرفتن کتاب" textFill="WHITE">
+                  <Label alignment="CENTER_RIGHT" layoutX="508.0" layoutY="108.0" prefHeight="27.0" prefWidth="205.0" text=" :امانت گرفتن کتاب" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="bookid_foramanatgiri" alignment="CENTER_RIGHT" layoutX="340.0" layoutY="133.0" prefHeight="33.0" prefWidth="165.0" promptText="آی دی کتاب" style="-fx-background-color: #02030A; -fx-border-color: #B7C3D7; -fx-border-radius: 2em;" />
+                  <TextField fx:id="bookid_foramanatgiri" alignment="CENTER_RIGHT" layoutX="328.0" layoutY="105.0" prefHeight="33.0" prefWidth="165.0" promptText="آی دی کتاب" style="-fx-background-color: #02030A; -fx-border-color: #B7C3D7; -fx-border-radius: 2em;" />
                </children>
             </Pane>
          </children>
       </StackPane>
       <Pane fx:id="rightPane" layoutX="790.0" prefHeight="576.0" prefWidth="256.0" style="-fx-background-color: #05071F;">
          <children>
-            <ImageView fitHeight="74.0" fitWidth="77.0" layoutX="91.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="108.0" fitWidth="97.0" layoutX="78.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/jimmy-fallon.png" />
+                  <Image url="@../images/profile-icon2.png" />
                </image>
             </ImageView>
             <Button fx:id="btn_home" alignment="CENTER_RIGHT" contentDisplay="RIGHT" graphicTextGap="22.0" layoutY="229.0" mnemonicParsing="false" onAction="#btn_Home_clicked" prefHeight="55.0" prefWidth="256.0" styleClass="button_Home" stylesheets="@../styles/style.css" text="                     خانه                     " textFill="#e7e5e5">
@@ -326,7 +322,10 @@
                   <Image url="@../images/icons8_Sign_Out_32px.png" />
                </image>
             </ImageView>
-            <Label fx:id="lbl_fullname" alignment="CENTER" contentDisplay="CENTER" layoutX="13.0" layoutY="142.0" prefHeight="27.0" prefWidth="232.0" text="Reza Mahmoudian" textFill="WHITE" />
+            <Label fx:id="lbl_fullname" alignment="CENTER" contentDisplay="CENTER" layoutX="13.0" layoutY="146.0" prefHeight="27.0" prefWidth="232.0" text="Reza Mahmoudian" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
          </children>
       </Pane>
       <Pane fx:id="pane_vorod" layoutX="299.0" layoutY="76.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="375.0" prefWidth="412.0" style="-fx-background-color: #02030A;" visible="false">

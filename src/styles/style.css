@@ -70,4 +70,17 @@
 .scroll-pane > .corner {
     -fx-background-color: black;
 }
+.button_addbook
+{
+    -fx-background-color : #108FFE;
+    -fx-text-fill : #e7e5e5;
+}
+
+.button_addbook:hover{
+    -fx-background-color : #10165F;
+}
+.button_addbook:pressed
+{
+    -fx-background-color : #1620A1;
+}
 
