@@ -225,6 +225,17 @@ public class Database {
 
 
 
+    public static void amanatgiri(String amanatgirande , String bookid) throws SQLException {
+
+        String mysql = "SELECT id FROM books";
+        System.out.println(mysql);
+        Database.getStatement().execute(mysql);
+        String mysql1 = ("UPDATE books SET amantgirande = '"+amanatgirande+"' where id="+ Integer.parseInt(bookid) );
+        System.out.println(mysql1);
+        Database.getStatement().execute(mysql1);
+    }
+
+
 
 
 
