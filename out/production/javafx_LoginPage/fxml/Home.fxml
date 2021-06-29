@@ -257,17 +257,120 @@
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></JFXButton>
-                  <Button fx:id="btn_amanatgiri" layoutX="187.0" layoutY="105.0" mnemonicParsing="false" onAction="#btn_amanatgiri_clicked" prefHeight="33.0" prefWidth="97.0" style="-fx-border-color: #2A73FF; -fx-border-radius: 20; -fx-background-color: transparent;" styleClass="button_Home" stylesheets="@../styles/style.css" text="امانت گیری">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <Label alignment="CENTER_RIGHT" layoutX="508.0" layoutY="108.0" prefHeight="27.0" prefWidth="205.0" text=" :امانت گرفتن کتاب" textFill="WHITE">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="bookid_foramanatgiri" alignment="CENTER_RIGHT" layoutX="328.0" layoutY="105.0" prefHeight="33.0" prefWidth="165.0" promptText="آی دی کتاب" style="-fx-background-color: #02030A; -fx-border-color: #B7C3D7; -fx-border-radius: 2em;" />
+                  <VBox layoutX="47.0" layoutY="62.0" prefHeight="117.0" prefWidth="699.0">
+                     <children>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="699.0" spacing="20.0">
+                           <children>
+                              <JFXRadioButton fx:id="allBookRB" nodeOrientation="RIGHT_TO_LEFT" onAction="#searchwith_showallbooks" text="نمایش همه" textFill="WHITE">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="jostejoRadio" />
+                                 </toggleGroup>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </JFXRadioButton>
+                              <JFXRadioButton fx:id="vazeiatBookRB" nodeOrientation="RIGHT_TO_LEFT" onAction="#searchwithbookvaziyat" text="وضعیت" textFill="WHITE" toggleGroup="$jostejoRadio">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></JFXRadioButton>
+                              <JFXRadioButton fx:id="IDBookRB" nodeOrientation="RIGHT_TO_LEFT" onAction="#searchwithbookid" text="شماره کتاب" textFill="WHITE" toggleGroup="$jostejoRadio">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></JFXRadioButton>
+                              <JFXRadioButton fx:id="nameBookRB" nodeOrientation="RIGHT_TO_LEFT" onAction="#searchwithbookname" text="نام کتاب" textFill="WHITE" toggleGroup="$jostejoRadio">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></JFXRadioButton>
+                              <Label prefHeight="17.0" prefWidth="135.0" text="جستجو بر اساس :" textFill="WHITE">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <HBox.margin>
+                                    <Insets left="50.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <StackPane prefHeight="78.0" prefWidth="699.0">
+                           <children>
+                              <Pane fx:id="searchwith_bookname_pane" prefHeight="68.0" prefWidth="699.0" visible="false">
+                                 <children>
+                                    <JFXTextField fx:id="ktbNametxt_search" focusColor="#c606a6" labelFloat="true" layoutX="316.0" layoutY="20.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="30.0" prefWidth="215.0" promptText="نام کتاب" unFocusColor="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </JFXTextField>
+                                    <JFXButton fx:id="search_bookname_btn" alignment="CENTER_RIGHT" layoutX="190.0" layoutY="20.0" onAction="#search_bookname_btn_action" prefHeight="31.0" prefWidth="85.0" text="جستجو" textFill="#f8f8f8">
+                                       <graphic>
+                                          <ImageView fitHeight="22.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../images/icons8_Search_52px.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                       <opaqueInsets>
+                                          <Insets left="20.0" />
+                                       </opaqueInsets>
+                                       <padding>
+                                          <Insets left="20.0" />
+                                       </padding>
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </JFXButton>
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="searchwith_bookid_pane" prefHeight="200.0" prefWidth="200.0" visible="false">
+                                 <children>
+                                    <JFXButton fx:id="search_bookID_btn" alignment="CENTER_RIGHT" layoutX="190.0" layoutY="20.0" onAction="#search_bookID_btn_actoin" prefHeight="38.0" prefWidth="85.0" text="جستجو" textFill="#f8f8f8">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="22.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../images/icons8_Search_52px.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                       <opaqueInsets>
+                                          <Insets left="20.0" />
+                                       </opaqueInsets>
+                                       <padding>
+                                          <Insets left="20.0" />
+                                       </padding>
+                                    </JFXButton>
+                                    <JFXTextField fx:id="ktbIDtxt_search" focusColor="#c606a6" labelFloat="true" layoutX="316.0" layoutY="20.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="30.0" prefWidth="215.0" promptText="آیدی کتاب" unFocusColor="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </JFXTextField>
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="searchwith_bookvaziyat_pane" prefHeight="200.0" prefWidth="200.0" visible="false">
+                                 <children>
+                                    <JFXRadioButton alignment="CENTER_LEFT" layoutX="380.0" layoutY="26.0" nodeOrientation="RIGHT_TO_LEFT" onAction="#show_amanatdadeshodebooks" text="امانت داده شده" textAlignment="RIGHT" textFill="WHITE">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="vaziyat_radiobtn" />
+                                       </toggleGroup>
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </JFXRadioButton>
+                                    <JFXRadioButton layoutX="248.0" layoutY="26.0" nodeOrientation="RIGHT_TO_LEFT" onAction="#show_mojod_books" text="در دسترس" textFill="WHITE" toggleGroup="$vaziyat_radiobtn">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </JFXRadioButton>
+                                 </children>
+                              </Pane>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </VBox>
                </children>
             </Pane>
          </children>
@@ -325,7 +428,8 @@
             <Label fx:id="lbl_fullname" alignment="CENTER" contentDisplay="CENTER" layoutX="13.0" layoutY="146.0" prefHeight="27.0" prefWidth="232.0" text="Reza Mahmoudian" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
-               </font></Label>
+               </font>
+            </Label>
          </children>
       </Pane>
       <Pane fx:id="pane_vorod" layoutX="299.0" layoutY="76.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="375.0" prefWidth="412.0" style="-fx-background-color: #02030A;" visible="false">

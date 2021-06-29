@@ -4,6 +4,8 @@ import classes.Books;
 import classes.person;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXRadioButton;
+import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -163,7 +166,42 @@ public class Controller implements Initializable {
     private TextField bookid_foramanatgiri;
 
     @FXML
-    private JFXListView<String> listView_Home;
+    private JFXButton search_bookID_btn;
+
+
+    @FXML
+    private JFXTextField ktbIDtxt_search;
+
+    @FXML
+    private JFXButton search_bookname_btn;
+
+
+    @FXML
+    private Pane searchwith_bookid_pane;
+
+    @FXML
+    private JFXTextField ktbNametxt_search;
+
+    @FXML
+    private JFXRadioButton nameBookRB;
+
+    @FXML
+    private ToggleGroup jostejoRadio;
+
+    @FXML
+    private JFXRadioButton vazeiatBookRB;
+
+
+    @FXML
+    private ToggleGroup vaziyat_radiobtn;
+
+    @FXML
+    private Pane searchwith_bookvaziyat_pane;
+
+    @FXML
+    private Pane searchwith_bookname_pane;
+
+
 
     final ObservableList<String> bookInfo = FXCollections.observableArrayList();
 
@@ -313,6 +351,7 @@ public class Controller implements Initializable {
 
     public void btn_search_clicked(ActionEvent actionEvent) {
 
+
         
     }
 
@@ -406,6 +445,77 @@ public class Controller implements Initializable {
 
     public void setLbl_DateofRegis(String a) {
         this.lbl_DateofRegis.setText(a);
+    }
+
+    public void searchwith_showallbooks(ActionEvent actionEvent) throws ClassNotFoundException {
+        searchwith_bookvaziyat_pane.setVisible(false);
+        searchwith_bookid_pane.setVisible(false);
+        searchwith_bookname_pane.setVisible(false);
+        booklists();
+    }
+
+    public void searchwithbookvaziyat(ActionEvent actionEvent) {
+        searchwith_bookid_pane.setVisible(false);
+        searchwith_bookname_pane.setVisible(false);
+        searchwith_bookvaziyat_pane.setVisible(true);
+    }
+
+    public void searchwithbookid(ActionEvent actionEvent) {
+        searchwith_bookname_pane.setVisible(false);
+        searchwith_bookvaziyat_pane.setVisible(false);
+        searchwith_bookid_pane.setVisible(true);
+    }
+
+    public void searchwithbookname(ActionEvent actionEvent) {
+        searchwith_bookvaziyat_pane.setVisible(false);
+        searchwith_bookid_pane.setVisible(false);
+        searchwith_bookname_pane.setVisible(true);
+    }
+
+    public void search_bookname_btn_action(ActionEvent actionEvent) {
+        String bookname = ktbNametxt_search.getText();
+
+        try {
+            pnItems_booklist.getChildren().clear();
+            Node[] nodes = new Node[1000];
+
+            Database.makeConnection();
+
+            String mysql = "SELECT id ,amantgirande ,  name, writer , date, date_ms , amantdahande , mohlat FROM books where name = "+ "\""+ bookname +"\"";
+            showbooks(Database.create_bookList(mysql));
+
+            Database.getStatement().close();
+            Database.closeConnection();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
+    public void search_bookID_btn_actoin(ActionEvent actionEvent) {
+        String bookid = ktbIDtxt_search.getText();
+
+        try {
+            pnItems_booklist.getChildren().clear();
+            Node[] nodes = new Node[1000];
+
+            Database.makeConnection();
+
+            String mysql = "SELECT id ,amantgirande ,  name, writer , date, date_ms , amantdahande , mohlat FROM books where id = "+ "\""+ bookid +"\"";
+            showbooks(Database.create_bookList(mysql));
+
+            Database.getStatement().close();
+            Database.closeConnection();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
+    public void show_amanatdadeshodebooks(ActionEvent actionEvent) {
+
+    }
+
+    public void show_mojod_books(ActionEvent actionEvent) {
+
     }
 }
 
